@@ -28,7 +28,10 @@ func main() {
 
 	// parse JSON
 	var specs Specs
-	json.Unmarshal(specsFile, &specs)
+	e = json.Unmarshal(specsFile, &specs)
+	if e != nil {
+		log.Fatal(fmt.Sprintf("Error parsing specs:\n%s", e))
+	}
 
 	fmt.Printf("%+v\n", specs)
 
