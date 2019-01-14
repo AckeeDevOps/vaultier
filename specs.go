@@ -11,8 +11,24 @@ type specsEntry struct {
 	Secrets []secretPapthEntry `json:"secrets"`
 }
 
+// Specs is representation of input JSON specification
+/*
+example:
+{
+	"vaultAddr": "https://vault.co.uk/",
+	"token": "1234567",
+	"specs": [
+		{
+			"branch": "master",
+			"secrets": [
+				{"path": "secret/data/key", vaultKey: "key", "localKey": "KEY"}
+			]
+		}
+	]
+}
+*/
 type Specs struct {
-	VaultAddr string       `json:"vaultAddr"`
-	Token     string       `json:"token"` // don't do that
-	Specs     []specsEntry `json:"specs"`
+	VaultAddr string       `json:"vaultAddr"` // optional
+	Token     string       `json:"token"`     // optional, don't do that
+	Specs     []specsEntry `json:"specs"`     // required
 }

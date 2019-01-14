@@ -21,7 +21,7 @@ func main() {
 	}
 
 	// open specs file
-	specsFile, e := ioutil.ReadFile(os.Getenv("SECRET_SPECS_PATH"))
+	specsFile, e := ioutil.ReadFile(os.Getenv("PLUGIN_SECRET_SPECS_PATH"))
 	if e != nil {
 		log.Fatal(fmt.Sprintf("Error loading specs file:\n%s", e))
 	}
