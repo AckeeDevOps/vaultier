@@ -1,11 +1,12 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+
+	yaml "gopkg.in/yaml.v2"
 
 	"github.com/go-resty/resty"
 	"github.com/joho/godotenv"
@@ -26,9 +27,9 @@ func main() {
 		log.Fatal(fmt.Sprintf("Error loading specs file:\n%s", e))
 	}
 
-	// parse JSON
+	// parse YAML
 	var specs Specs
-	e = json.Unmarshal(specsFile, &specs)
+	e = yaml.Unmarshal(specsFile, &specs)
 	if e != nil {
 		log.Fatal(fmt.Sprintf("Error parsing specs:\n%s", e))
 	}

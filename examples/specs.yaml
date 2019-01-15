@@ -1,0 +1,9 @@
+---
+vaultAddr: ''
+token: ''
+specs:
+- branch: master
+  secrets:
+  - path: secret/data/test
+    vaultKey: key
+    localKey: KEY
