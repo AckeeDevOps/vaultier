@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 /*
 SecretKeyMapEntry represents details about one KEY:VALUE secret pair
@@ -50,8 +53,13 @@ type Specs struct {
 }
 
 func (s Specs) validate() error {
+	var errors []string
 	if s.VaultAddr == "" {
-		return fmt.Errorf("vaultAddr can't be empty")
+		errors = append(errors, "vaultAddr can't be empty")
+	}
+
+	if cap(errors) > 0 {
+		return fmt.Errorf(strings.Join(errors[:], "\n"))
 	}
 
 	return nil
