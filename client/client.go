@@ -2,21 +2,13 @@ package client
 
 import (
 	"crypto/tls"
+	"encoding/json"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/go-resty/resty"
 )
-
-/*
-SecretKeyMapEntry represents details about one KEY:VALUE secret pair
-VaultKey represent name of the key under data are stored in Vault
-LocalKey represents name of the local key e.g. KEY becomes results['KEY']
-*/
-type SecretKeyMapEntry struct {
-	VaultKey string `yaml:"vaultKey" validate:"required"`
-	LocalKey string `yaml:"localKey" validate:"required"`
-}
 
 // Client communicates with Vault
 type Client struct {
@@ -38,6 +30,12 @@ func New(addr string, token string, insecure bool) *Client {
 func (c Client) Get(path string, keyMap []SecretKeyMapEntry) (map[string]string, error) {
 	// prepare output map
 	secrets := make(map[string]string)
+
+	// sanitize path
+	path = strings.Trim(path, " ")
+	if strings.HasPrefix(path, "/") {
+		path = path[1:]
+	}
 
 	// parse url
 	u, err := url.Parse(c.addr)
@@ -65,8 +63,17 @@ func (c Client) Get(path string, keyMap []SecretKeyMapEntry) (map[string]string,
 	}
 
 	// process results
-	fmt.Println(baseURL + path)
-	fmt.Println(string(resp.Body()))
+	respJSON := VaultResponse{}
+	json.Unmarshal(resp.Body(), &respJSON)
+
+	// validate length of response object
+	if cap(keyMap) != 0 && len(respJSON.Data.Data) == 0 {
+		return nil, fmt.Errorf("response does not contain any secrets")
+	}
+
+	for _, m := range keyMap {
+		secrets[m.LocalKey] = respJSON.Data.Data[m.VaultKey]
+	}
 
 	return secrets, nil
 }

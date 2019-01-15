@@ -44,3 +44,7 @@
 [[constraint]]
   name = "gopkg.in/go-playground/validator.v9"
   version = "9.25.0"
+
+[[constraint]]
+  name = "github.com/davecgh/go-spew"
+  version = "1.1.1"
