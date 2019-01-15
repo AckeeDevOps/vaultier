@@ -34,6 +34,12 @@ func main() {
 		log.Fatal(fmt.Sprintf("Error parsing specs:\n%s", e))
 	}
 
+	// validate specification
+	e = specs.validate()
+	if e != nil {
+		log.Fatal(fmt.Sprintf("Error validating specs:\n%s", e))
+	}
+
 	fmt.Printf("%+v\n", specs)
 
 	resty.R().Get("http://httpbin.org/get")

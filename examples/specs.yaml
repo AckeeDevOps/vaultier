@@ -1,5 +1,5 @@
 ---
-vaultAddr: ''
+vaultAddr: 'http://vault.co.uk'
 token: ''
 specs:
 - branch: master
