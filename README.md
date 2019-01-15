@@ -1,4 +1,4 @@
-# Vaultier CI/CD Vault helper
+# Vaultier: CI/CD Vault helper
 
 Vaultier will be simple helper for Container native CI/CD pipelines. 
 The main goal is to parse specs file, obtain secrets from the Vault 

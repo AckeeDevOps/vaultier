@@ -8,7 +8,6 @@ import (
 
 	yaml "gopkg.in/yaml.v2"
 
-	"github.com/go-resty/resty"
 	"github.com/joho/godotenv"
 )
 
@@ -41,6 +40,4 @@ func main() {
 	}
 
 	fmt.Printf("%+v\n", specs)
-
-	resty.R().Get("http://httpbin.org/get")
 }
