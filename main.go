@@ -34,8 +34,6 @@ func main() {
 		log.Fatal(fmt.Sprintf("Error parsing specs:\n%s", e))
 	}
 
-	// inject env variables if needed
-
 	// validate specification
 	e = specs.validate()
 	if e != nil {
