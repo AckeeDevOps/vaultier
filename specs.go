@@ -1,34 +1,36 @@
 package main
 
+type secretKeyMapEntry struct {
+	VaultKey string `yaml:"vaultKey"`
+	LocalKey string `yaml:"localKey"`
+}
+
 type secretPapthEntry struct {
-	Path     string `json:"path"`
-	VaultKey string `json:"vaultKey"`
-	LocalKey string `json:"localKey"`
+	Path   string              `yaml:"path"`
+	KeyMap []secretKeyMapEntry `yaml:"keymap"`
 }
 
 type specsEntry struct {
-	Branch  string             `json:"branch"`
-	Secrets []secretPapthEntry `json:"secrets"`
+	Branch  string             `yaml:"branch"`
+	Secrets []secretPapthEntry `yaml:"secrets"`
 }
 
-// Specs is representation of input JSON specification
+// Specs is representation of input YAML specification
 /*
 example:
-{
-	"vaultAddr": "https://vault.co.uk/",
-	"token": "1234567",
-	"specs": [
-		{
-			"branch": "master",
-			"secrets": [
-				{"path": "secret/data/key", vaultKey: "key", "localKey": "KEY"}
-			]
-		}
-	]
-}
+---
+vaultAddr: ''
+token: ''
+specs:
+- branch: master
+  secrets:
+  - path: secret/data/test
+    keyMap:
+      - vaultKey: key
+        localKey: KEY
 */
 type Specs struct {
-	VaultAddr string       `json:"vaultAddr"` // optional
-	Token     string       `json:"token"`     // optional, don't do that
-	Specs     []specsEntry `json:"specs"`     // required
+	VaultAddr string       `yaml:"vaultAddr"` // optional
+	Token     string       `yaml:"token"`     // optional, don't do that
+	Specs     []specsEntry `yaml:"specs"`     // required
 }
