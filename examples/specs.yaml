@@ -2,9 +2,9 @@
 vaultAddr: 'http://vault.co.uk'
 token: ''
 specs:
-- branch: master
-  secrets:
-  - path: secret/data/test
-    keyMap:
-      - vaultKey: key
-        localKey: KEY
+  - branch: master
+    secrets:
+      - path: secret/data/test
+        keyMap:
+          - vaultKey: key
+            localKey: KEY
