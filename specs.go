@@ -1,9 +1,6 @@
 package main
 
-import (
-	"fmt"
-	"strings"
-)
+import validator "gopkg.in/go-playground/validator.v9"
 
 /*
 SecretKeyMapEntry represents details about one KEY:VALUE secret pair
@@ -11,8 +8,8 @@ VaultKey represent name of the key under data are stored in Vault
 LocalKey represents name of the local key e.g. KEY becomes results['KEY']
 */
 type SecretKeyMapEntry struct {
-	VaultKey string `yaml:"vaultKey"`
-	LocalKey string `yaml:"localKey"`
+	VaultKey string `yaml:"vaultKey" validate:"required"`
+	LocalKey string `yaml:"localKey" validate:"required"`
 }
 
 /*
@@ -20,16 +17,16 @@ SecretPathEntry represents Vault path e.g. secret/data/keys
 KeyMap allows to retreive multiple keys from the single path
 */
 type SecretPathEntry struct {
-	Path   string              `yaml:"path"`   // required
-	KeyMap []SecretKeyMapEntry `yaml:"keyMap"` // required
+	Path   string              `yaml:"path" validate:"required"`   // required
+	KeyMap []SecretKeyMapEntry `yaml:"keyMap" validate:"required"` // required
 }
 
 /*
 SpecsEntry represents configuration for the certain git branch
 */
 type SpecsEntry struct {
-	Branch  string            `yaml:"branch"`  // required
-	Secrets []SecretPathEntry `yaml:"secrets"` // required
+	Branch  string            `yaml:"branch" validate:"required"`
+	Secrets []SecretPathEntry `yaml:"secrets" validate:"required"`
 }
 
 /*
@@ -47,68 +44,11 @@ specs:
         localKey: KEY
 */
 type Specs struct {
-	Specs []SpecsEntry `yaml:"specs"` // required
+	Specs []SpecsEntry `yaml:"specs" validate:"required"` // required
 }
 
 func (s Specs) validate() error {
-	var errors []string
-
-	/*
-		Specs can't be emty, if you don't need any secrets -
-		just don't use this plugin.
-	*/
-	if cap(s.Specs) == 0 {
-		errors = append(errors, "specs can't be empty")
-	}
-
-	// validate branches
-	for _, branch := range s.Specs {
-
-		// check branch name
-		if branch.Branch == "" {
-			errors = append(errors, "specs/[].branch can't be empty")
-		}
-
-		// check if secrets specification exist
-		if cap(branch.Secrets) == 0 {
-			errors = append(errors, "specs/[].secrets can't be empty")
-		}
-
-		for _, path := range branch.Secrets {
-
-			// check if vault path is specified
-			if path.Path == "" {
-				errors = append(errors, "/specs/[].secrets/[].path can't be empty")
-			}
-
-			if cap(path.KeyMap) == 0 {
-				errors = append(errors, "/specs/[].secrets/[].keyMap can't be empty")
-			}
-
-			// check the whole keyMap
-			for _, keyMap := range path.KeyMap {
-				if keyMap.LocalKey == "" {
-					errors = append(
-						errors,
-						"/specs/[].secrets/[].keyMap/[].localKey can't be empty",
-					)
-				}
-
-				if keyMap.VaultKey == "" {
-					errors = append(
-						errors,
-						"/specs/[].secrets/[].keyMap/[].vaultKey can't be empty",
-					)
-				}
-			}
-
-		}
-	}
-
-	if cap(errors) > 0 {
-		return fmt.Errorf(strings.Join(errors[:], "\n"))
-	}
-
-	// everything's alright
-	return nil
+	validate := validator.New()
+	err := validate.Struct(s)
+	return err
 }
