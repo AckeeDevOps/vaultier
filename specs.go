@@ -47,20 +47,24 @@ specs:
         localKey: KEY
 */
 type Specs struct {
-	VaultAddr string       `yaml:"vaultAddr"` // optional
-	Token     string       `yaml:"token"`     // optional, don't do that
-	Specs     []SpecsEntry `yaml:"specs"`     // required
+	Specs []SpecsEntry `yaml:"specs"` // required
 }
 
 func (s Specs) validate() error {
 	var errors []string
-	if s.VaultAddr == "" {
-		errors = append(errors, "vaultAddr can't be empty")
+
+	/*
+		Specs can't be emty, if you don't need any secrets -
+		just don't use this plugin.
+	*/
+	if cap(s.Specs) == 0 {
+		errors = append(errors, "specs can't be empty")
 	}
 
 	if cap(errors) > 0 {
 		return fmt.Errorf(strings.Join(errors[:], "\n"))
 	}
 
+	// everything's alright
 	return nil
 }
