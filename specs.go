@@ -61,6 +61,20 @@ func (s Specs) validate() error {
 		errors = append(errors, "specs can't be empty")
 	}
 
+	// validate branches
+	for _, branch := range s.Specs {
+
+		// check branch name
+		if branch.Branch == "" {
+			errors = append(errors, "specs/[].branch can't be empty")
+		}
+
+		// check if secrets specification exist
+		if cap(branch.Secrets) == 0 {
+			errors = append(errors, "specs/[].secrets can't be empty")
+		}
+	}
+
 	if cap(errors) > 0 {
 		return fmt.Errorf(strings.Join(errors[:], "\n"))
 	}
