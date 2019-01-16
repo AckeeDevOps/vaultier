@@ -62,19 +62,8 @@ func main() {
 	}
 
 	// create a new Vault client
-	client := client.New(vaultAddr, vaultToken, false)
+	final := collectSecrets(specsSelection, vaultAddr, vaultToken, false)
 
-	// go through specification and push results to single map
-	results := []map[string]interface{}{}
-	for _, secret := range specsSelection {
-		res, err := client.Get(secret.Path, secret.KeyMap)
-		if err != nil {
-			log.Fatal(fmt.Sprintf("error getting secrets:\n%s", err))
-		}
-		results = append(results, res)
-	}
-
-	final := mergeResults(results)
 	finalJSON, err := json.Marshal(final)
 	if err != nil {
 		log.Fatal("failed to marshal final results")
@@ -84,4 +73,19 @@ func main() {
 
 	// push secrets back to JSON
 
+}
+
+func collectSecrets(secrets []SecretPathEntry, vaultAddr string, vaultToken string, insecure bool) map[string]interface{} {
+	client := client.New(vaultAddr, vaultToken, insecure)
+	results := []map[string]interface{}{}
+
+	for _, secret := range secrets {
+		res, err := client.Get(secret.Path, secret.KeyMap)
+		if err != nil {
+			log.Fatal(fmt.Sprintf("error getting secrets:\n%s", err))
+		}
+		results = append(results, res)
+	}
+
+	return mergeResults(results)
 }
