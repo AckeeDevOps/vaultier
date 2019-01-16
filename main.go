@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -46,18 +47,30 @@ func main() {
 
 	client := client.New(vaultAddr, vaultToken, false)
 
+	// go through specification and push results to single map
 	results := []map[string]interface{}{}
 	for _, branch := range specs.Specs {
-		for _, secret := range branch.Secrets {
-			res, err := client.Get(secret.Path, secret.KeyMap)
-			if err != nil {
-				log.Fatal(fmt.Sprintf("error getting secrets:\n%s", err))
+		if branch.Branch == os.Getenv("PLUGIN_BRANCH") {
+			for _, secret := range branch.Secrets {
+				res, err := client.Get(secret.Path, secret.KeyMap)
+				if err != nil {
+					log.Fatal(fmt.Sprintf("error getting secrets:\n%s", err))
+				}
+				results = append(results, res)
 			}
-			results = append(results, res)
+		} else {
+			log.Print(fmt.Sprintf("skipping branch '%s'", branch.Branch))
 		}
 	}
 
 	final := mergeResults(results)
-	log.Print(final)
+	finalJSON, err := json.Marshal(final)
+	if err != nil {
+		log.Fatal("failed to marshal final results")
+	}
+
+	log.Print(string(finalJSON))
+
+	// push secrets back to JSON
 
 }
