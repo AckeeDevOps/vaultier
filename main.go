@@ -23,8 +23,15 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
+	// get env variables
+	vaultAddr := os.Getenv("PLUGIN_VAULT_ADDR")
+	vaultToken := os.Getenv("PLUGIN_VAULT_TOKEN")
+	currentBranch := os.Getenv("PLUGIN_BRANCH")
+	cause := os.Getenv("PLUGIN_RUN_CAUSE")
+	specsPath := os.Getenv("PLUGIN_SECRET_SPECS_PATH")
+
 	// open specs file
-	specsFile, e := ioutil.ReadFile(os.Getenv("PLUGIN_SECRET_SPECS_PATH"))
+	specsFile, e := ioutil.ReadFile(specsPath)
 	if e != nil {
 		log.Fatal(fmt.Sprintf("Error loading specs file:\n%s", e))
 	}
@@ -36,19 +43,6 @@ func main() {
 		log.Fatal(fmt.Sprintf("Error parsing specs:\n%s", e))
 	}
 
-	// validate specification
-	//e = specs.validate()
-	//if e != nil {
-	//	log.Fatal(fmt.Sprintf("Error validating specs:\n%s", e))
-	//}
-
-	vaultAddr := os.Getenv("PLUGIN_VAULT_ADDR")
-	vaultToken := os.Getenv("PLUGIN_VAULT_TOKEN")
-	currentBranch := os.Getenv("PLUGIN_BRANCH")
-
-	client := client.New(vaultAddr, vaultToken, false)
-
-	cause := os.Getenv("PLUGIN_RUN_CAUSE")
 	var specsSelection []SecretPathEntry
 	if cause == "delivery" {
 		for _, b := range specs.Branches {
@@ -66,6 +60,9 @@ func main() {
 	if cap(specsSelection) == 0 {
 		log.Fatal(fmt.Sprintf("%s configuration is empty", cause))
 	}
+
+	// create a new Vault client
+	client := client.New(vaultAddr, vaultToken, false)
 
 	// go through specification and push results to single map
 	results := []map[string]interface{}{}
