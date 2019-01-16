@@ -2,7 +2,6 @@ package main
 
 import (
 	client "github.com/vranystepan/vaultier/client"
-	validator "gopkg.in/go-playground/validator.v9"
 )
 
 /*
@@ -10,16 +9,24 @@ SecretPathEntry represents Vault path e.g. secret/data/keys
 KeyMap allows to retreive multiple keys from the single path
 */
 type SecretPathEntry struct {
-	Path   string                     `yaml:"path" validate:"required"`
-	KeyMap []client.SecretKeyMapEntry `yaml:"keyMap" validate:"required,dive,required"`
+	Path   string                     `yaml:"path"`
+	KeyMap []client.SecretKeyMapEntry `yaml:"keyMap"`
 }
 
 /*
-SpecsEntry represents configuration for the certain git branch
+Branch represents configuration for the certain git branch
 */
-type SpecsEntry struct {
-	Branch  string            `yaml:"branch" validate:"required"`
-	Secrets []SecretPathEntry `yaml:"secrets" validate:"required,dive,required"`
+type Branch struct {
+	Name    string            `yaml:"name"`
+	Secrets []SecretPathEntry `yaml:"secrets"`
+}
+
+/*
+TestConfig is related to CI testing activities e.g.
+secrets for database for integration testing
+*/
+type TestConfig struct {
+	Secrets []SecretPathEntry `yaml:"secrets"`
 }
 
 /*
@@ -37,11 +44,10 @@ specs:
         localKey: KEY
 */
 type Specs struct {
-	Specs []SpecsEntry `yaml:"specs" validate:"required,dive,required"`
+	Branches   []Branch   `yaml:"branches"`
+	TestConfig TestConfig `yaml:"testConfig"`
 }
 
 // perform validation of required fields
-func (s Specs) validate() error {
-	validate := validator.New()
-	return validate.Struct(s)
-}
+//func (s Specs) validate() error {
+//}
