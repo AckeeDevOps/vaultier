@@ -7,8 +7,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/davecgh/go-spew/spew"
-
 	"github.com/vranystepan/vaultier/client"
 
 	yaml "gopkg.in/yaml.v2"
@@ -38,8 +36,6 @@ func main() {
 		log.Fatal(fmt.Sprintf("Error parsing specs:\n%s", e))
 	}
 
-	spew.Dump(specs)
-
 	// validate specification
 	//e = specs.validate()
 	//if e != nil {
@@ -52,20 +48,33 @@ func main() {
 
 	client := client.New(vaultAddr, vaultToken, false)
 
+	cause := os.Getenv("PLUGIN_RUN_CAUSE")
+	var specsSelection []SecretPathEntry
+	if cause == "delivery" {
+		for _, b := range specs.Branches {
+			if b.Name == currentBranch {
+				specsSelection = b.Secrets
+				break
+			}
+		}
+	} else if cause == "test" {
+		specsSelection = specs.TestConfig.Secrets
+	} else {
+		log.Fatal("unknown PLUGIN_RUN_CAUSE value")
+	}
+
+	if cap(specsSelection) == 0 {
+		log.Fatal(fmt.Sprintf("%s configuration is empty", cause))
+	}
+
 	// go through specification and push results to single map
 	results := []map[string]interface{}{}
-	for _, branch := range specs.Branches {
-		if branch.Name == currentBranch {
-			for _, secret := range branch.Secrets {
-				res, err := client.Get(secret.Path, secret.KeyMap)
-				if err != nil {
-					log.Fatal(fmt.Sprintf("error getting secrets:\n%s", err))
-				}
-				results = append(results, res)
-			}
-		} else {
-			log.Print(fmt.Sprintf("skipping branch '%s'", branch.Name))
+	for _, secret := range specsSelection {
+		res, err := client.Get(secret.Path, secret.KeyMap)
+		if err != nil {
+			log.Fatal(fmt.Sprintf("error getting secrets:\n%s", err))
 		}
+		results = append(results, res)
 	}
 
 	final := mergeResults(results)
