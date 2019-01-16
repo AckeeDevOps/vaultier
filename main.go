@@ -6,6 +6,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/vranystepan/vaultier/client"
+
 	yaml "gopkg.in/yaml.v2"
 
 	"github.com/joho/godotenv"
@@ -39,6 +41,23 @@ func main() {
 		log.Fatal(fmt.Sprintf("Error validating specs:\n%s", e))
 	}
 
-	fmt.Printf("%+v\n", specs)
+	vaultAddr := os.Getenv("PLUGIN_VAULT_ADDR")
+	vaultToken := os.Getenv("PLUGIN_VAULT_TOKEN")
+
+	client := client.New(vaultAddr, vaultToken, false)
+
+	results := []map[string]interface{}{}
+	for _, branch := range specs.Specs {
+		for _, secret := range branch.Secrets {
+			res, err := client.Get(secret.Path, secret.KeyMap)
+			if err != nil {
+				log.Fatal(fmt.Sprintf("error getting secrets:\n%s", err))
+			}
+			results = append(results, res)
+		}
+	}
+
+	final := mergeResults(results)
+	log.Print(final)
 
 }
