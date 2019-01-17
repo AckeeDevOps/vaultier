@@ -17,19 +17,6 @@ import (
 func main() {
 	log.Print("starting vaultier ...")
 
-	// load configuration variables
-	e := godotenv.Load()
-	if e != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	// get env variables
-	vaultAddr := os.Getenv("PLUGIN_VAULT_ADDR")
-	vaultToken := os.Getenv("PLUGIN_VAULT_TOKEN")
-	currentBranch := os.Getenv("PLUGIN_BRANCH")
-	cause := os.Getenv("PLUGIN_RUN_CAUSE")
-	specsPath := os.Getenv("PLUGIN_SECRET_SPECS_PATH")
-
 	// open specs file
 	specsFile, e := ioutil.ReadFile(specsPath)
 	if e != nil {
@@ -88,4 +75,20 @@ func collectSecrets(secrets []SecretPathEntry, vaultAddr string, vaultToken stri
 	}
 
 	return mergeResults(results)
+}
+
+func getConfig() (string, string, string, string, string) {
+	// load configuration variables
+	e := godotenv.Load()
+	if e != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	// get env variables
+	vaultAddr := os.Getenv("PLUGIN_VAULT_ADDR")        // required
+	vaultToken := os.Getenv("PLUGIN_VAULT_TOKEN")      // required
+	currentBranch := os.Getenv("PLUGIN_BRANCH")        // required
+	cause := os.Getenv("PLUGIN_RUN_CAUSE")             // optional, default=delivery
+	specsPath := os.Getenv("PLUGIN_SECRET_SPECS_PATH") // optional, default=./secrets.yaml
+
 }
