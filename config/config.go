@@ -16,7 +16,7 @@ type PluginConfig struct {
 	SpecsPath  string
 }
 
-func (c PluginConfig) Create() *PluginConfig {
+func Create() *PluginConfig {
 	p := PluginConfig{}
 
 	vaultAddr := os.Getenv("PLUGIN_VAULT_ADDR")        // required
@@ -27,7 +27,7 @@ func (c PluginConfig) Create() *PluginConfig {
 
 	p.VaultAddr = strings.ToLower(vaultAddr)
 	p.Branch = strings.ToLower(currentBranch)
-	p.VaultToken = strings.ToLower(vaultToken)
+	p.VaultToken = vaultToken
 	p.Cause = strings.ToLower(cause)
 	p.SpecsPath = strings.ToLower(specsPath)
 

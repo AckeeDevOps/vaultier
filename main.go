@@ -5,20 +5,25 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 
 	"github.com/vranystepan/vaultier/client"
+	"github.com/vranystepan/vaultier/config"
 
 	yaml "gopkg.in/yaml.v2"
-
-	"github.com/joho/godotenv"
 )
 
 func main() {
 	log.Print("starting vaultier ...")
 
+	// get and validate config
+	cfg := config.Create()
+	err := cfg.Validate()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// open specs file
-	specsFile, e := ioutil.ReadFile(specsPath)
+	specsFile, e := ioutil.ReadFile(cfg.SpecsPath)
 	if e != nil {
 		log.Fatal(fmt.Sprintf("Error loading specs file:\n%s", e))
 	}
@@ -31,25 +36,25 @@ func main() {
 	}
 
 	var specsSelection []SecretPathEntry
-	if cause == "delivery" {
+	if cfg.Cause == "delivery" {
 		for _, b := range specs.Branches {
-			if b.Name == currentBranch {
+			if b.Name == cfg.Branch {
 				specsSelection = b.Secrets
 				break
 			}
 		}
-	} else if cause == "test" {
+	} else if cfg.Cause == "test" {
 		specsSelection = specs.TestConfig.Secrets
 	} else {
 		log.Fatal("unknown PLUGIN_RUN_CAUSE value")
 	}
 
 	if cap(specsSelection) == 0 {
-		log.Fatal(fmt.Sprintf("%s configuration is empty", cause))
+		log.Fatal(fmt.Sprintf("%s configuration is empty", cfg.Cause))
 	}
 
 	// create a new Vault client
-	final := collectSecrets(specsSelection, vaultAddr, vaultToken, false)
+	final := collectSecrets(specsSelection, cfg.VaultAddr, cfg.VaultToken, false)
 
 	finalJSON, err := json.Marshal(final)
 	if err != nil {
@@ -75,20 +80,4 @@ func collectSecrets(secrets []SecretPathEntry, vaultAddr string, vaultToken stri
 	}
 
 	return mergeResults(results)
-}
-
-func getConfig() (string, string, string, string, string) {
-	// load configuration variables
-	e := godotenv.Load()
-	if e != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	// get env variables
-	vaultAddr := os.Getenv("PLUGIN_VAULT_ADDR")        // required
-	vaultToken := os.Getenv("PLUGIN_VAULT_TOKEN")      // required
-	currentBranch := os.Getenv("PLUGIN_BRANCH")        // required
-	cause := os.Getenv("PLUGIN_RUN_CAUSE")             // optional, default=delivery
-	specsPath := os.Getenv("PLUGIN_SECRET_SPECS_PATH") // optional, default=./secrets.yaml
-
 }
