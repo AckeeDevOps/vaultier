@@ -55,3 +55,36 @@ used with tools like [env2](https://www.npmjs.com/package/env2) or
 ```
 
 ## Configuration options
+
+## Secrets specification file
+```yaml
+---
+# will be used only when 'delivery' is selected
+branches:
+  # secrets will be selected based on PLUGIN_BRANCH env. variable
+  - name: master
+    secrets:
+      - path: secret/data/blah/production/config1
+        # each Vault path can have more secrets you
+        # waint to obtain so so can specify more
+        # keyMap entries
+        keyMap:
+          - vaultKey: vaultVariableName1
+            localKey: VAR1
+      - path: secret/data/blah/production/config2
+        keyMap:
+          - vaultKey: vaultVariableName2
+            localKey: VAR2
+
+# will be used only when 'test' is selected
+testConfig:
+  secrets:
+    - path: secret/data/blah/test/config1
+      keyMap:
+        - vaultKey: vaultVariableName1
+          localKey: VAR1
+    - path: secret/data/blah/test/config2
+      keyMap:
+        - vaultKey: vaultVariableName2
+          localKey: VAR2
+```
