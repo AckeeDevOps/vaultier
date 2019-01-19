@@ -81,12 +81,14 @@ func getSpecs(c *config.PluginConfig) Specs {
 // generate secrets manifest in the requested format
 func generateManifest(c *config.PluginConfig, s map[string]string) []byte {
 	var finalObj interface{}
-	if c.Cause == "delivery" {
+	if c.OutputFormat == "helm" {
 		finalObj = helmManifestFotmat{
 			Secrets: s,
 		}
-	} else {
+	} else if c.OutputFormat == "dotenv" {
 		finalObj = s
+	} else {
+		log.Fatalf("unknown output format %s", c.OutputFormat)
 	}
 
 	finalJSON, err := json.Marshal(finalObj)

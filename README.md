@@ -7,12 +7,12 @@ processing by dotenv-like libraries or Helm.
 
 ## Supported output formats
 
-Output formats are controlled via `PLUGIN_RUN_CAUSE` environment variable 
+Output formats are controlled via `PLUGIN_OUTPUT_FORMAT` environment variable 
 in following manner:
 
-### Delivery
+### Helm
 
-`delivery` produces key:value pairs nested to `secrets` property:
+`helm` produces key:value pairs nested to `secrets` property:
 
 ```json
 {
@@ -41,9 +41,9 @@ and use them with Helm CLI
 helm install -n release01 -f /tmp/secrets.json /path/to/chart
 ```
 
-### Test
+### .env (JSON)
 
-`test` produces top-level key:value structure which is meant to be 
+`dotenv` produces top-level key:value structure which is meant to be 
 used with tools like [env2](https://www.npmjs.com/package/env2) or 
 [dotenv-json](https://www.npmjs.com/package/dotenv-json).
 
@@ -74,8 +74,12 @@ specified in the specs file.
 
 **`PLUGIN_RUN_CAUSE`**
 
-As mentioned, this option influences the output format. Currently supported 
-options are `delivery` or `test`.
+This option influences whether `branches` or `testConfig` will  
+be selected. Currently supported options are `delivery` or `test`.
+
+**`PLUGIN_OUTPUT_FORMAT`**
+As mentioned, this option influences the output format. 
+Currently supported options are `helm` or `dotenv`.
 
 **`PLUGIN_SECRET_SPECS_PATH`**
 

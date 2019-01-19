@@ -9,12 +9,13 @@ import (
 )
 
 type PluginConfig struct {
-	VaultAddr  string
-	VaultToken string
-	Cause      string
-	Branch     string
-	SpecsPath  string
-	OutputPath string
+	VaultAddr    string
+	VaultToken   string
+	Cause        string
+	Branch       string
+	SpecsPath    string
+	OutputPath   string
+	OutputFormat string
 }
 
 func Create() *PluginConfig {
@@ -24,6 +25,7 @@ func Create() *PluginConfig {
 	vaultToken := os.Getenv("PLUGIN_VAULT_TOKEN")        // required
 	currentBranch := os.Getenv("PLUGIN_BRANCH")          // required
 	cause := os.Getenv("PLUGIN_RUN_CAUSE")               // optional, default=delivery
+	outputFormat := os.Getenv("PLUGIN_OUTPUT_FORMAT")    // optional, default=delivery
 	specsPath := os.Getenv("PLUGIN_SECRET_SPECS_PATH")   // optional, default=./secrets.yaml
 	outputPath := os.Getenv("PLUGIN_SECRET_OUTPUT_PATH") // required
 
@@ -33,6 +35,7 @@ func Create() *PluginConfig {
 	p.Cause = strings.ToLower(cause)
 	p.SpecsPath = specsPath
 	p.OutputPath = outputPath
+	p.OutputFormat = outputFormat
 
 	return &p
 }
@@ -65,6 +68,11 @@ func (c *PluginConfig) Validate() error {
 	if c.Cause != "delivery" && c.Cause != "test" {
 		log.Print("using default run cause: delivery")
 		c.Cause = "delivery"
+	}
+
+	// validate output format
+	if c.OutputFormat != "helm" && c.OutputFormat != "dotenv" {
+		errors = append(errors, "empty output format")
 	}
 
 	// validate path
