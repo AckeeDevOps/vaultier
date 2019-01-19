@@ -7,6 +7,10 @@ processing by dotenv-like libraries or Helm.
 
 [![pipeline status](https://gitlab.com/Vrany/vaultier/badges/master/pipeline.svg)](https://gitlab.com/Vrany/vaultier/commits/master)
 
+> Please note that using of this tool can be potentially dangerous - 
+> in the certain phase of CI/CD process, there are secrets stored as 
+> a plain text. Hence always use Vaultier in the environment you trust.
+
 ## Supported output formats
 
 Output formats are controlled via `PLUGIN_OUTPUT_FORMAT` environment variable 
