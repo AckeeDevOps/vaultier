@@ -58,6 +58,7 @@ func getConfig() *config.PluginConfig {
 }
 
 func getSpecs(c *config.PluginConfig) Specs {
+	log.Printf("getting secrets configuration from %s", c.SpecsPath)
 	// open specs file
 	specsFile, e := ioutil.ReadFile(c.SpecsPath)
 	if e != nil {
