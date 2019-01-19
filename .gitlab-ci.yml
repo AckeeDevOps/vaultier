@@ -8,9 +8,20 @@ stages:
 
 build:
   image: golang:1.11.4-alpine3.8
+  stage: build
   before_script:
+    - echo $CI_PIPELINE_SOURCE
     - mkdir -p /go/src/github.com/vranystepan
     - ln -sf $CI_PROJECT_DIR /go/src/github.com/vranystepan/vaultier
     - cd /go/src/github.com/vranystepan/vaultier
   script:
-    - go build -o /tmp/vaultier
+    - go build -o vaultier
+  only:
+    refs:
+      - master
+    variables:
+      - $CI_PIPELINE_SOURCE == "push"
+#  artifacts:
+#    paths:
+#      - vaultier
+
