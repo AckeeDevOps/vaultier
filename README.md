@@ -108,3 +108,5 @@ testConfig:
         - vaultKey: vaultVariableName2
           localKey: VAR2
 ```
+
+## Example use in CD pipeline
