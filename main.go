@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 )
 
@@ -20,10 +19,8 @@ func main() {
 	// collect secrets from Vault
 	final := collectSecrets(specsSelection, cfg.VaultAddr, cfg.VaultToken, false)
 
-	finalJSON, err := json.Marshal(final)
-	if err != nil {
-		log.Fatal("failed to marshal final results")
-	}
+	// prepare helm or .env structure
+	finalJSON := generateManifest(cfg, final)
 
 	log.Print(string(finalJSON))
 

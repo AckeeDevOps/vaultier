@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -9,6 +10,10 @@ import (
 	"github.com/vranystepan/vaultier/config"
 	yaml "gopkg.in/yaml.v2"
 )
+
+type helmManifestFotmat struct {
+	Secrets map[string]string `json:"secrets"`
+}
 
 // merge multiple results into single map
 func mergeResults(maps []map[string]string) map[string]string {
@@ -69,7 +74,23 @@ func getSpecs(c *config.PluginConfig) Specs {
 	return specs
 }
 
-func generateManifest(c *config.PluginConfig) {}
+func generateManifest(c *config.PluginConfig, s map[string]string) string {
+	var finalObj interface{}
+	if c.Cause == "delivery" {
+		finalObj = helmManifestFotmat{
+			Secrets: s,
+		}
+	} else {
+		finalObj = s
+	}
+
+	finalJSON, err := json.Marshal(finalObj)
+	if err != nil {
+		log.Fatal("failed to marshal final results")
+	}
+
+	return string(finalJSON)
+}
 
 func collectSecrets(secrets []SecretPathEntry, vaultAddr string, vaultToken string, insecure bool) map[string]string {
 	client := client.New(vaultAddr, vaultToken, insecure)
