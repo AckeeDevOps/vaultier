@@ -69,11 +69,21 @@ to get one
 
 **`PLUGIN_BRANCH`**
 
+A branch you want to retrieve secrets for. Same branch has to be 
+specified in the specs file. 
+
 **`PLUGIN_RUN_CAUSE`**
+
+As mentioned, this option influences the output format. Currently supported 
+options are `delivery` or `test`.
 
 **`PLUGIN_SECRET_SPECS_PATH`**
 
+Path to the specs file. If not set, it defaults to `secrets.yaml`.
+
 **`PLUGIN_SECRET_OUTPUT_PATH`**
+
+Path to the output file. Absolute or relative.
 
 ## Secrets specification file
 
@@ -110,3 +120,5 @@ testConfig:
 ```
 
 ## Example use in CD pipeline
+
+in progress.
