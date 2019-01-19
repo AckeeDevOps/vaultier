@@ -14,22 +14,25 @@ type PluginConfig struct {
 	Cause      string
 	Branch     string
 	SpecsPath  string
+	OutputPath string
 }
 
 func Create() *PluginConfig {
 	p := PluginConfig{}
 
-	vaultAddr := os.Getenv("PLUGIN_VAULT_ADDR")        // required
-	vaultToken := os.Getenv("PLUGIN_VAULT_TOKEN")      // required
-	currentBranch := os.Getenv("PLUGIN_BRANCH")        // required
-	cause := os.Getenv("PLUGIN_RUN_CAUSE")             // optional, default=delivery
-	specsPath := os.Getenv("PLUGIN_SECRET_SPECS_PATH") // optional, default=./secrets.yaml
+	vaultAddr := os.Getenv("PLUGIN_VAULT_ADDR")          // required
+	vaultToken := os.Getenv("PLUGIN_VAULT_TOKEN")        // required
+	currentBranch := os.Getenv("PLUGIN_BRANCH")          // required
+	cause := os.Getenv("PLUGIN_RUN_CAUSE")               // optional, default=delivery
+	specsPath := os.Getenv("PLUGIN_SECRET_SPECS_PATH")   // optional, default=./secrets.yaml
+	outputPath := os.Getenv("PLUGIN_SECRET_OUTPUT_PATH") // required
 
 	p.VaultAddr = strings.ToLower(vaultAddr)
 	p.Branch = strings.ToLower(currentBranch)
 	p.VaultToken = vaultToken
 	p.Cause = strings.ToLower(cause)
-	p.SpecsPath = strings.ToLower(specsPath)
+	p.SpecsPath = specsPath
+	p.OutputPath = outputPath
 
 	return &p
 }
@@ -51,6 +54,11 @@ func (c *PluginConfig) Validate() error {
 	// validate branch
 	if c.Branch == "" {
 		errors = append(errors, "empty branch name")
+	}
+
+	// validate branch
+	if c.OutputPath == "" {
+		errors = append(errors, "empty output path")
 	}
 
 	// validate run cause

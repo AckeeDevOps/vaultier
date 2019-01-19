@@ -74,7 +74,7 @@ func getSpecs(c *config.PluginConfig) Specs {
 	return specs
 }
 
-func generateManifest(c *config.PluginConfig, s map[string]string) string {
+func generateManifest(c *config.PluginConfig, s map[string]string) []byte {
 	var finalObj interface{}
 	if c.Cause == "delivery" {
 		finalObj = helmManifestFotmat{
@@ -89,7 +89,7 @@ func generateManifest(c *config.PluginConfig, s map[string]string) string {
 		log.Fatal("failed to marshal final results")
 	}
 
-	return string(finalJSON)
+	return finalJSON
 }
 
 func collectSecrets(secrets []SecretPathEntry, vaultAddr string, vaultToken string, insecure bool) map[string]string {
@@ -98,6 +98,7 @@ func collectSecrets(secrets []SecretPathEntry, vaultAddr string, vaultToken stri
 
 	for _, secret := range secrets {
 		res, err := client.Get(secret.Path, secret.KeyMap)
+		log.Printf("Getting secrets from %s", secret.Path)
 		if err != nil {
 			log.Fatal(fmt.Sprintf("error getting secrets:\n%s", err))
 		}
@@ -105,4 +106,13 @@ func collectSecrets(secrets []SecretPathEntry, vaultAddr string, vaultToken stri
 	}
 
 	return mergeResults(results)
+}
+
+func writeFile(c *config.PluginConfig, s []byte) {
+	err := ioutil.WriteFile(c.OutputPath, s, 0644)
+	if err != nil {
+		log.Fatalf("could not create output file %s", c.OutputPath)
+	}
+
+	log.Printf("data successfully written to %s", c.OutputPath)
 }

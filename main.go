@@ -22,8 +22,7 @@ func main() {
 	// prepare helm or .env structure
 	finalJSON := generateManifest(cfg, final)
 
-	log.Print(string(finalJSON))
-
-	// push secrets back to JSON
+	// create json file
+	writeFile(cfg, finalJSON)
 
 }
