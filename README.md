@@ -56,22 +56,26 @@ used with tools like [env2](https://www.npmjs.com/package/env2) or
 
 ## Configuration options
 
-**PLUGIN_VAULT_ADDR** url of your Vault instance. Typically it's something 
+**`PLUGIN_VAULT_ADDR`**
+
+url of your Vault instance. Typically it's something 
 like `http://yourvault.yourdomain.co.uk`
 
-**PLUGIN_VAULT_TOKEN** vault token, follow 
+**`PLUGIN_VAULT_TOKEN`** 
+
+vault token, follow 
 [official Vault documentation](https://www.vaultproject.io/docs/commands/token/create.html) 
 to get one
 
-**PLUGIN_BRANCH**
+**`PLUGIN_BRANCH`**
 
-**PLUGIN_RUN_CAUSE**
+**`PLUGIN_RUN_CAUSE`**
 
-**PLUGIN_SECRET_SPECS_PATH**
+**`PLUGIN_SECRET_SPECS_PATH`**
 
-**PLUGIN_SECRET_OUTPUT_PATH**
+**`PLUGIN_SECRET_OUTPUT_PATH`**
 
-## Secrets specification file
+##Secrets specification file
 ```yaml
 ---
 # will be used only when 'delivery' is selected
