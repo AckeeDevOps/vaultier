@@ -1,0 +1,16 @@
+stages:
+  - test
+  - lint
+  - build
+
+# test tbd
+# lint tbd
+
+build:
+  image: 1.11.4-alpine3.8
+  before_script:
+    - mkdir -p /go/src/github.com/vranystepan
+    - ln -sf $CI_PROJECT_DIR /go/src/github.com/vranystepan/vaultier
+    - cd /go/src/github.com/vranystepan/vaultier
+  script:
+    - go build -o /tmp/vaultier
