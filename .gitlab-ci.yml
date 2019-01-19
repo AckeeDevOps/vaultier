@@ -19,8 +19,8 @@ build:
   only:
     refs:
       - master
-    variables:
-      - $CI_PIPELINE_SOURCE == "push"
+#    variables:
+#      - $CI_PIPELINE_SOURCE == "push"
 #  artifacts:
 #    paths:
 #      - vaultier
