@@ -11,6 +11,7 @@ before_script:
   - apk add git
   - mkdir -p /go/src/github.com/vranystepan
   - go get -u golang.org/x/lint/golint
+  - go get -u github.com/kyoh86/richgo
   - ln -sf $CI_PROJECT_DIR /go/src/github.com/vranystepan/vaultier
   - cd /go/src/github.com/vranystepan/vaultier
   - export CGO_ENABLED=0
@@ -21,7 +22,7 @@ unit test:
   image: golang:1.11.4-alpine3.8
   stage: test
   script:
-    - go test ./... -cover -v
+    - richgo test ./... -cover -v
 
 # run everytime, this verifies whether 
 # compiler is able to compile the code
