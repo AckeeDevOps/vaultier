@@ -5,13 +5,14 @@ import (
 	"io/ioutil"
 	"log"
 
+	"github.com/vranystepan/vaultier/client"
 	"github.com/vranystepan/vaultier/config"
 	yaml "gopkg.in/yaml.v2"
 )
 
 // merge multiple results into single map
-func mergeResults(maps []map[string]interface{}) map[string]interface{} {
-	result := map[string]interface{}{}
+func mergeResults(maps []map[string]string) map[string]string {
+	result := map[string]string{}
 	for _, m := range maps {
 		for k, v := range m {
 			result[k] = v
@@ -66,4 +67,21 @@ func getSpecs(c *config.PluginConfig) Specs {
 	}
 
 	return specs
+}
+
+func generateManifest(c *config.PluginConfig) {}
+
+func collectSecrets(secrets []SecretPathEntry, vaultAddr string, vaultToken string, insecure bool) map[string]string {
+	client := client.New(vaultAddr, vaultToken, insecure)
+	results := []map[string]string{}
+
+	for _, secret := range secrets {
+		res, err := client.Get(secret.Path, secret.KeyMap)
+		if err != nil {
+			log.Fatal(fmt.Sprintf("error getting secrets:\n%s", err))
+		}
+		results = append(results, res)
+	}
+
+	return mergeResults(results)
 }

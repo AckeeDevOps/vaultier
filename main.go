@@ -2,10 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
-
-	"github.com/vranystepan/vaultier/client"
 )
 
 func main() {
@@ -32,19 +29,4 @@ func main() {
 
 	// push secrets back to JSON
 
-}
-
-func collectSecrets(secrets []SecretPathEntry, vaultAddr string, vaultToken string, insecure bool) map[string]interface{} {
-	client := client.New(vaultAddr, vaultToken, insecure)
-	results := []map[string]interface{}{}
-
-	for _, secret := range secrets {
-		res, err := client.Get(secret.Path, secret.KeyMap)
-		if err != nil {
-			log.Fatal(fmt.Sprintf("error getting secrets:\n%s", err))
-		}
-		results = append(results, res)
-	}
-
-	return mergeResults(results)
 }

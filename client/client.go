@@ -27,9 +27,9 @@ func New(addr string, token string, insecure bool) *Client {
 }
 
 // Get gets required
-func (c Client) Get(path string, keyMap []SecretKeyMapEntry) (map[string]interface{}, error) {
+func (c Client) Get(path string, keyMap []SecretKeyMapEntry) (map[string]string, error) {
 	// prepare output map
-	secrets := make(map[string]interface{})
+	secrets := map[string]string{}
 
 	// sanitize path
 	path = strings.Trim(path, " ")

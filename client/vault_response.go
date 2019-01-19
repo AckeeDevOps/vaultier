@@ -1,7 +1,7 @@
 package client
 
 type VaultResponseData struct {
-	Data map[string]interface{} `json:"data"`
+	Data map[string]string `json:"data"`
 }
 
 type VaultResponseMetadata struct {
