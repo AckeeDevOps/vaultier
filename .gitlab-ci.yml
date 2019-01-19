@@ -33,7 +33,7 @@ build test:
 
 # run everytime
 lint: 
-  image:
+  image: golang:1.11.4-alpine3.8
   stage: lint
   script:
     - golint . config client
