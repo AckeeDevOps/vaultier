@@ -19,9 +19,9 @@ build:
   only:
     refs:
       - master
-#    variables:
-#      - $CI_PIPELINE_SOURCE == "push"
-#  artifacts:
-#    paths:
-#      - vaultier
+    variables:
+      - $CI_COMMIT_TAG
+  artifacts:
+    paths:
+      - vaultier
 
