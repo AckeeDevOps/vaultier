@@ -5,6 +5,8 @@ The main goal is to parse specs file, obtain secrets from the Vault
 instance and create basic (one level deep) JSON file for the further 
 processing by dotenv-like libraries or Helm.
 
+[![pipeline status](https://gitlab.com/Vrany/vaultier/badges/master/pipeline.svg)](https://gitlab.com/Vrany/vaultier/commits/master)
+
 ## Supported output formats
 
 Output formats are controlled via `PLUGIN_OUTPUT_FORMAT` environment variable 
