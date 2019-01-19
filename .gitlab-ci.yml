@@ -9,6 +9,7 @@ stages:
 before_script:
   - echo $CI_PIPELINE_SOURCE
   - mkdir -p /go/src/github.com/vranystepan
+  - go get -u golang.org/x/lint/golint
   - ln -sf $CI_PROJECT_DIR /go/src/github.com/vranystepan/vaultier
   - cd /go/src/github.com/vranystepan/vaultier
   - export CGO_ENABLED=0
@@ -28,6 +29,13 @@ build test:
   stage: test
   script:
     - go build -a -installsuffix cgo -o vaultier
+
+# run everytime
+lint: 
+  image:
+  stage: lint
+  script:
+    - golint . config client
 
 # run only when it's tagged
 build final:
