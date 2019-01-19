@@ -56,3 +56,47 @@ func TestInvalidConfigurationWithoutToken(t *testing.T) {
 		t.Errorf("Validator should return error but it does not")
 	}
 }
+
+func TestInvalidConfigurationWithoutBranch(t *testing.T) {
+	setEnv()
+	os.Setenv("PLUGIN_BRANCH", "") // <= here
+
+	cfg := Create()
+	err := cfg.Validate()
+	if err == nil {
+		t.Errorf("Validator should return error but it does not")
+	}
+}
+
+func TestInvalidConfigurationWithoutRunCause(t *testing.T) {
+	setEnv()
+	os.Setenv("PLUGIN_RUN_CAUSE", "") // <= here
+
+	cfg := Create()
+	err := cfg.Validate()
+	if err != nil {
+		t.Errorf("Validator should be happy but it return %s", err)
+	}
+}
+
+func TestInvalidConfigurationWithoutOutputFormat(t *testing.T) {
+	setEnv()
+	os.Setenv("PLUGIN_OUTPUT_FORMAT", "") // <= here
+
+	cfg := Create()
+	err := cfg.Validate()
+	if err == nil {
+		t.Errorf("Validator should return error but it does not")
+	}
+}
+
+func TestInvalidConfigurationWithoutOutputPath(t *testing.T) {
+	setEnv()
+	os.Setenv("PLUGIN_SECRET_OUTPUT_PATH", "") // <= here
+
+	cfg := Create()
+	err := cfg.Validate()
+	if err == nil {
+		t.Errorf("Validator should return error but it does not")
+	}
+}
