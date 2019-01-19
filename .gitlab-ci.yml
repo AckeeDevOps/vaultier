@@ -8,6 +8,7 @@ stages:
 
 before_script:
   - echo $CI_PIPELINE_SOURCE
+  - apk add git
   - mkdir -p /go/src/github.com/vranystepan
   - go get -u golang.org/x/lint/golint
   - ln -sf $CI_PROJECT_DIR /go/src/github.com/vranystepan/vaultier
