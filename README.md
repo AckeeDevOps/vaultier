@@ -75,7 +75,8 @@ to get one
 
 **`PLUGIN_SECRET_OUTPUT_PATH`**
 
-##Secrets specification file
+## Secrets specification file
+
 ```yaml
 ---
 # will be used only when 'delivery' is selected
