@@ -21,7 +21,7 @@ unit test:
   image: golang:1.11.4-alpine3.8
   stage: test
   script:
-    - go test -v
+    - go test ./... -cover -v
 
 # run everytime, this verifies whether 
 # compiler is able to compile the code
