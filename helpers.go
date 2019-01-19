@@ -26,6 +26,7 @@ func mergeResults(maps []map[string]string) map[string]string {
 	return result
 }
 
+// get configuration from the specs file based on PLUGIN_RUN_CAUSE
 func getSelection(s Specs, c *config.PluginConfig) []SecretPathEntry {
 	var specsSelection []SecretPathEntry
 	if c.Cause == "delivery" {
@@ -48,6 +49,7 @@ func getSelection(s Specs, c *config.PluginConfig) []SecretPathEntry {
 	return specsSelection
 }
 
+// parse provided configuraton
 func getConfig() *config.PluginConfig {
 	cfg := config.Create()
 	err := cfg.Validate()
@@ -57,6 +59,7 @@ func getConfig() *config.PluginConfig {
 	return cfg
 }
 
+// read specs file
 func getSpecs(c *config.PluginConfig) Specs {
 	log.Printf("getting secrets configuration from %s", c.SpecsPath)
 	// open specs file
@@ -75,6 +78,7 @@ func getSpecs(c *config.PluginConfig) Specs {
 	return specs
 }
 
+// generate secrets manifest in the requested format
 func generateManifest(c *config.PluginConfig, s map[string]string) []byte {
 	var finalObj interface{}
 	if c.Cause == "delivery" {
@@ -93,6 +97,7 @@ func generateManifest(c *config.PluginConfig, s map[string]string) []byte {
 	return finalJSON
 }
 
+// go through specs and call vault client
 func collectSecrets(secrets []SecretPathEntry, vaultAddr string, vaultToken string, insecure bool) map[string]string {
 	client := client.New(vaultAddr, vaultToken, insecure)
 	results := []map[string]string{}
@@ -109,6 +114,7 @@ func collectSecrets(secrets []SecretPathEntry, vaultAddr string, vaultToken stri
 	return mergeResults(results)
 }
 
+// write results to the file
 func writeFile(c *config.PluginConfig, s []byte) {
 	err := ioutil.WriteFile(c.OutputPath, s, 0644)
 	if err != nil {
