@@ -44,7 +44,7 @@ build final:
   image: golang:1.11.4-alpine3.8
   stage: build
   script:
-    - go build -a -installsuffix cgo -o vaultier
+    - go build -a -installsuffix cgo -o vaultier-$CI_COMMIT_TAG
   only:
     variables:
       - $CI_COMMIT_TAG
