@@ -100,12 +100,16 @@ func generateManifest(c *config.PluginConfig, s map[string]string) []byte {
 }
 
 // go through specs and call vault client
-func collectSecrets(secrets []SecretPathEntry, vaultAddr string, vaultToken string, insecure bool) map[string]string {
-	client := client.New(vaultAddr, vaultToken, insecure)
+func collectSecrets(
+	secrets []SecretPathEntry,
+	vaultAddr string,
+	vaultToken string,
+	insecure bool) map[string]string {
+	c := client.New(vaultAddr, vaultToken, insecure)
 	results := []map[string]string{}
 
 	for _, secret := range secrets {
-		res, err := client.Get(secret.Path, secret.KeyMap)
+		res, err := c.Get(secret.Path, secret.KeyMap, client.VaultFetcher{})
 		log.Printf("Getting secrets from %s", secret.Path)
 		if err != nil {
 			log.Fatal(fmt.Sprintf("error getting secrets:\n%s", err))

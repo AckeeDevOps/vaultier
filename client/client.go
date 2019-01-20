@@ -2,7 +2,6 @@ package client
 
 import (
 	"crypto/tls"
-	"encoding/json"
 	"fmt"
 	"net/url"
 	"strings"
@@ -27,7 +26,7 @@ func New(addr string, token string, insecure bool) *Client {
 }
 
 // Get gets required
-func (c Client) Get(path string, keyMap []SecretKeyMapEntry) (map[string]string, error) {
+func (c Client) Get(path string, keyMap []SecretKeyMapEntry, fetcher VaultResponseFetcher) (map[string]string, error) {
 	// prepare output map
 	secrets := map[string]string{}
 
@@ -53,18 +52,11 @@ func (c Client) Get(path string, keyMap []SecretKeyMapEntry) (map[string]string,
 	// configure resty
 	resty.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: c.insecure})
 
-	// get secrets
-	resp, err := resty.R().
-		SetHeader("Accept", "application/json").
-		SetHeader("X-Vault-Token", c.token).
-		Get(baseURL + path)
-	if err != nil {
-		return nil, fmt.Errorf("Could not get secrets from vault:\n%s", err)
-	}
-
 	// process results
-	respJSON := VaultResponse{}
-	json.Unmarshal(resp.Body(), &respJSON)
+	respJSON, err := fetcher.Fetch(c.token, (baseURL + path))
+	if err != nil {
+		return nil, fmt.Errorf("could not ret vault respomse: %s", err)
+	}
 
 	// validate length of response object
 	if cap(keyMap) != 0 && len(respJSON.Data.Data) == 0 {
