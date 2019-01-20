@@ -21,7 +21,13 @@ unit test:
   image: golang:1.11.4-alpine3.8
   stage: test
   script:
-    - go test $(go list ./... | grep -v /vendor/) -v -coverprofile .testCoverage.txt
+    - |
+      PKG_LIST=$(go list ./... | grep -v /vendor/)
+      for package in ${PKG_LIST}; do
+        go test -covermode=count -coverprofile "cover/${package##*/}.cov" "$package" ;
+      done
+      tail -q -n +2 cover/*.cov >> cover/coverage.cov
+      go tool cover -func=cover/coverage.cov
   coverage: /^coverage:\s(\d+(?:\.\d+)?%)/
 
 # run everytime, this verifies whether 
