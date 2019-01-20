@@ -12,3 +12,6 @@
 *.out
 testing.yaml
 secrets.yaml
+
+*.cov
+.*.cov

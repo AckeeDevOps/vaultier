@@ -11,25 +11,18 @@ before_script:
   - apk add git
   - mkdir -p /go/src/github.com/vranystepan
   - go get -u golang.org/x/lint/golint
+  - go get -u github.com/kyoh86/richgo
   - ln -sf $CI_PROJECT_DIR /go/src/github.com/vranystepan/vaultier
   - cd /go/src/github.com/vranystepan/vaultier
   - export CGO_ENABLED=0
   - export GOOS=linux
 
 # run everytime
-# https://about.gitlab.com/2017/11/27/go-tools-and-gitlab-how-to-do-continuous-integration-like-a-boss/
 unit test:
   image: golang:1.11.4-alpine3.8
   stage: test
   script:
-    - |
-      PKG_LIST=$(go list ./... | grep -v /vendor/)
-      for package in ${PKG_LIST}; do
-        go test -covermode=count -coverprofile "cover/${package##*/}.cov" "GOPATH/$package" ;
-      done
-      tail -q -n +2 cover/*.cov >> cover/coverage.cov
-      go tool cover -func=cover/coverage.cov
-  coverage: /^coverage:\s(\d+(?:\.\d+)?%)/
+    - go test $(go list ./... | grep -v /vendor/) -v -cover
 
 # run everytime, this verifies whether 
 # compiler is able to compile the code
