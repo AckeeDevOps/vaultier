@@ -1,10 +1,15 @@
 package client
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
+// implements VaultResponseFetcher
 type mockFetcherSuccess struct{}
 type mockFetcherFailure struct{}
 type mockFetcherEmpty struct{}
+type mockFetcherErr struct{}
 
 func (mockFetcherSuccess) Fetch(token string, url string) (*VaultResponse, error) {
 	r := VaultResponse{
@@ -35,6 +40,10 @@ func (mockFetcherFailure) Fetch(token string, url string) (*VaultResponse, error
 func (mockFetcherEmpty) Fetch(token string, url string) (*VaultResponse, error) {
 	r := VaultResponse{}
 	return &r, nil
+}
+
+func (mockFetcherErr) Fetch(token string, url string) (*VaultResponse, error) {
+	return nil, fmt.Errorf("some strange HTTP error")
 }
 
 var c = Client{
@@ -81,6 +90,14 @@ func TestErrorResponse(t *testing.T) {
 
 func TestEmptyResponse(t *testing.T) {
 	_, err := c.Get("/path/to/secrets", keyMap, mockFetcherEmpty{})
+
+	if err == nil {
+		t.Errorf("client should return error but it does not")
+	}
+}
+
+func TestErrResponse(t *testing.T) {
+	_, err := c.Get("/path/to/secrets", keyMap, mockFetcherErr{})
 
 	if err == nil {
 		t.Errorf("client should return error but it does not")

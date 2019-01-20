@@ -56,7 +56,7 @@ func (c Client) Get(path string, keyMap []SecretKeyMapEntry, fetcher VaultRespon
 	// process results
 	respJSON, err := fetcher.Fetch(c.token, (baseURL + path))
 	if err != nil {
-		return nil, fmt.Errorf("could not ret vault respomse: %s", err)
+		return nil, fmt.Errorf("could not ret vault response: %s", err)
 	}
 
 	// validate length of response object
