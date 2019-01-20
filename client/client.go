@@ -3,6 +3,7 @@ package client
 import (
 	"crypto/tls"
 	"fmt"
+	"log"
 	"net/url"
 	"strings"
 
@@ -60,7 +61,11 @@ func (c Client) Get(path string, keyMap []SecretKeyMapEntry, fetcher VaultRespon
 
 	// validate length of response object
 	if cap(keyMap) != 0 && len(respJSON.Data.Data) == 0 {
-		return nil, fmt.Errorf("response does not contain any secrets")
+		if cap(respJSON.Errors) > 0 {
+			log.Printf("response contains following errors: %s", strings.Join(respJSON.Errors[:], "; "))
+			return nil, fmt.Errorf("response contains errors")
+		}
+		return nil, fmt.Errorf("response does not contain any secrets nor errors")
 	}
 
 	for _, m := range keyMap {

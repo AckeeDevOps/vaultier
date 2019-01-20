@@ -3,6 +3,7 @@ package client
 import "testing"
 
 type mockFetcherSuccess struct{}
+type mockFetcherFailure struct{}
 
 func (mockFetcherSuccess) Fetch(token string, url string) (*VaultResponse, error) {
 	r := VaultResponse{
@@ -15,6 +16,16 @@ func (mockFetcherSuccess) Fetch(token string, url string) (*VaultResponse, error
 				"vaultVar1": "secret1",
 				"vaultVar2": "secret2",
 			},
+		},
+	}
+	return &r, nil
+}
+
+func (mockFetcherFailure) Fetch(token string, url string) (*VaultResponse, error) {
+	r := VaultResponse{
+		Errors: []string{
+			"this is utterly wrong",
+			"you should not be here",
 		},
 	}
 	return &r, nil
@@ -52,4 +63,12 @@ func TestValidResponse(t *testing.T) {
 		t.Errorf("client does not return expected remapped data, it returns %s", r)
 	}
 
+}
+
+func TestErrorResponse(t *testing.T) {
+	_, err := c.Get("/path/to/secrets", keyMap, mockFetcherFailure{})
+
+	if err == nil {
+		t.Errorf("client should return error but it does not")
+	}
 }
