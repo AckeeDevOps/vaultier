@@ -65,6 +65,7 @@ func (c Client) Get(path string, keyMap []SecretKeyMapEntry, fetcher VaultRespon
 			log.Printf("response contains following errors: %s", strings.Join(respJSON.Errors[:], "; "))
 			return nil, fmt.Errorf("response contains errors")
 		}
+		log.Printf("response from %s is empty", path)
 		return nil, fmt.Errorf("response does not contain any secrets nor errors")
 	}
 

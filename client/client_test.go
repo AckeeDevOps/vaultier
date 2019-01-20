@@ -4,6 +4,7 @@ import "testing"
 
 type mockFetcherSuccess struct{}
 type mockFetcherFailure struct{}
+type mockFetcherEmpty struct{}
 
 func (mockFetcherSuccess) Fetch(token string, url string) (*VaultResponse, error) {
 	r := VaultResponse{
@@ -28,6 +29,11 @@ func (mockFetcherFailure) Fetch(token string, url string) (*VaultResponse, error
 			"you should not be here",
 		},
 	}
+	return &r, nil
+}
+
+func (mockFetcherEmpty) Fetch(token string, url string) (*VaultResponse, error) {
+	r := VaultResponse{}
 	return &r, nil
 }
 
@@ -67,6 +73,14 @@ func TestValidResponse(t *testing.T) {
 
 func TestErrorResponse(t *testing.T) {
 	_, err := c.Get("/path/to/secrets", keyMap, mockFetcherFailure{})
+
+	if err == nil {
+		t.Errorf("client should return error but it does not")
+	}
+}
+
+func TestEmptyResponse(t *testing.T) {
+	_, err := c.Get("/path/to/secrets", keyMap, mockFetcherEmpty{})
 
 	if err == nil {
 		t.Errorf("client should return error but it does not")
