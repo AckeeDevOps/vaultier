@@ -17,4 +17,5 @@ type VaultResponse struct {
 	Renewable     bool              `json:"renewable"`
 	LeaseDuration int               `json:"lease_duration"`
 	Data          VaultResponseData `json:"data"`
+	Errors        []string          `json:"errors"`
 }
