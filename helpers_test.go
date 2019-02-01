@@ -5,15 +5,14 @@ import (
 )
 
 func TestMergeResultsFunction(t *testing.T) {
-	input := []map[string]string{
-		map[string]string{
-			"var1": "val1",
-			"var2": "val2",
-		},
-		map[string]string{
-			"var3": "val3",
-		},
-	}
+	input := []map[string]interface{}{}
+	input = append(input, map[string]interface{}{
+		"var1": "val1",
+		"var2": "val2",
+	})
+	input = append(input, map[string]interface{}{
+		"var3": 3000,
+	})
 
 	result := mergeResults(input)
 
