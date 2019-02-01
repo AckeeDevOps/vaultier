@@ -27,9 +27,9 @@ func New(addr string, token string, insecure bool) *Client {
 }
 
 // Get gets required
-func (c Client) Get(path string, keyMap []SecretKeyMapEntry, fetcher VaultResponseFetcher) (map[string]string, error) {
+func (c Client) Get(path string, keyMap []SecretKeyMapEntry, fetcher VaultResponseFetcher) (map[string]interface{}, error) {
 	// prepare output map
-	secrets := map[string]string{}
+	secrets := map[string]interface{}{}
 
 	// sanitize path
 	path = strings.Trim(path, " ")

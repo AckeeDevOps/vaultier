@@ -21,13 +21,13 @@ type PluginConfig struct {
 func Create() *PluginConfig {
 	p := PluginConfig{}
 
-	vaultAddr := os.Getenv("PLUGIN_VAULT_ADDR")          // required
-	vaultToken := os.Getenv("PLUGIN_VAULT_TOKEN")        // required
-	currentBranch := os.Getenv("PLUGIN_BRANCH")          // required
-	cause := os.Getenv("PLUGIN_RUN_CAUSE")               // optional, default=delivery
-	outputFormat := os.Getenv("PLUGIN_OUTPUT_FORMAT")    // optional, default=delivery
-	specsPath := os.Getenv("PLUGIN_SECRET_SPECS_PATH")   // optional, default=./secrets.yaml
-	outputPath := os.Getenv("PLUGIN_SECRET_OUTPUT_PATH") // required
+	vaultAddr := os.Getenv("VAULTIER_VAULT_ADDR")          // required
+	vaultToken := os.Getenv("VAULTIER_VAULT_TOKEN")        // required
+	currentBranch := os.Getenv("VAULTIER_BRANCH")          // required
+	cause := os.Getenv("VAULTIER_RUN_CAUSE")               // optional, default=delivery
+	outputFormat := os.Getenv("VAULTIER_OUTPUT_FORMAT")    // optional, default=delivery
+	specsPath := os.Getenv("VAULTIER_SECRET_SPECS_PATH")   // optional, default=./secrets.yaml
+	outputPath := os.Getenv("VAULTIER_SECRET_OUTPUT_PATH") // required
 
 	p.VaultAddr = strings.ToLower(vaultAddr)
 	p.Branch = strings.ToLower(currentBranch)

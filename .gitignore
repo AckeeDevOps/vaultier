@@ -15,3 +15,5 @@ secrets.yaml
 
 *.cov
 .*.cov
+
+setenv.sh

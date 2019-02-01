@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"log"
 
+	b64 "encoding/base64"
+
 	"github.com/vranystepan/vaultier/client"
 	"github.com/vranystepan/vaultier/config"
 	yaml "gopkg.in/yaml.v2"
@@ -16,8 +18,8 @@ type helmManifestFotmat struct {
 }
 
 // merge multiple results into single map
-func mergeResults(maps []map[string]string) map[string]string {
-	result := map[string]string{}
+func mergeResults(maps []map[string]interface{}) map[string]interface{} {
+	result := map[string]interface{}{}
 	for _, m := range maps {
 		for k, v := range m {
 			result[k] = v
@@ -79,11 +81,21 @@ func getSpecs(c *config.PluginConfig) Specs {
 }
 
 // generate secrets manifest in the requested format
-func generateManifest(c *config.PluginConfig, s map[string]string) []byte {
+func generateManifest(c *config.PluginConfig, s map[string]interface{}) []byte {
 	var finalObj interface{}
 	if c.OutputFormat == "helm" {
+
+		// convert the whole document to JSON first
+		res, err := json.Marshal(s)
+		if err != nil {
+			log.Fatal("could not marshal config to JSON")
+		}
+
+		// add the whole configuration as en extra key
+		s["cfg.json"] = string(res)
+
 		finalObj = helmManifestFotmat{
-			Secrets: s,
+			Secrets: convertToB64String(s),
 		}
 	} else if c.OutputFormat == "dotenv" {
 		finalObj = s
@@ -104,9 +116,10 @@ func collectSecrets(
 	secrets []SecretPathEntry,
 	vaultAddr string,
 	vaultToken string,
-	insecure bool) map[string]string {
+	insecure bool) map[string]interface{} {
+
 	c := client.New(vaultAddr, vaultToken, insecure)
-	results := []map[string]string{}
+	results := []map[string]interface{}{}
 
 	for _, secret := range secrets {
 		res, err := c.Get(secret.Path, secret.KeyMap, client.VaultFetcher{})
@@ -128,4 +141,14 @@ func writeFile(c *config.PluginConfig, s []byte) {
 	}
 
 	log.Printf("data successfully written to %s", c.OutputPath)
+}
+
+func convertToB64String(input map[string]interface{}) map[string]string {
+	output := map[string]string{}
+
+	for k, v := range input {
+		output[k] = b64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%v", v)))
+	}
+
+	return output
 }

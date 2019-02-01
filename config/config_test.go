@@ -6,13 +6,13 @@ import (
 )
 
 func setEnv() {
-	os.Setenv("PLUGIN_VAULT_ADDR", "http://vault.co.uk")
-	os.Setenv("PLUGIN_VAULT_TOKEN", "abcdefg")
-	os.Setenv("PLUGIN_BRANCH", "master")
-	os.Setenv("PLUGIN_RUN_CAUSE", "delivery")
-	os.Setenv("PLUGIN_OUTPUT_FORMAT", "helm")
-	os.Setenv("PLUGIN_SECRET_SPECS_PATH", "/tmp/input")
-	os.Setenv("PLUGIN_SECRET_OUTPUT_PATH", "/tmp/output")
+	os.Setenv("VAULTIER_VAULT_ADDR", "http://vault.co.uk")
+	os.Setenv("VAULTIER_VAULT_TOKEN", "abcdefg")
+	os.Setenv("VAULTIER_BRANCH", "master")
+	os.Setenv("VAULTIER_RUN_CAUSE", "delivery")
+	os.Setenv("VAULTIER_OUTPUT_FORMAT", "helm")
+	os.Setenv("VAULTIER_SECRET_SPECS_PATH", "/tmp/input")
+	os.Setenv("VAULTIER_SECRET_OUTPUT_PATH", "/tmp/output")
 }
 
 func TestValidConfiguration(t *testing.T) {
@@ -26,7 +26,7 @@ func TestValidConfiguration(t *testing.T) {
 
 func TestValidConfigurationWithoutInput(t *testing.T) {
 	setEnv()
-	os.Setenv("PLUGIN_SECRET_SPECS_PATH", "")
+	os.Setenv("VAULTIER_SECRET_SPECS_PATH", "")
 
 	cfg := Create()
 	err := cfg.Validate()
@@ -37,7 +37,7 @@ func TestValidConfigurationWithoutInput(t *testing.T) {
 
 func TestInvalidConfigurationWithoutAddress(t *testing.T) {
 	setEnv()
-	os.Setenv("PLUGIN_VAULT_ADDR", "")
+	os.Setenv("VAULTIER_VAULT_ADDR", "")
 
 	cfg := Create()
 	err := cfg.Validate()
@@ -48,7 +48,7 @@ func TestInvalidConfigurationWithoutAddress(t *testing.T) {
 
 func TestInvalidConfigurationWithoutToken(t *testing.T) {
 	setEnv()
-	os.Setenv("PLUGIN_VAULT_TOKEN", "") // <= here
+	os.Setenv("VAULTIER_VAULT_TOKEN", "") // <= here
 
 	cfg := Create()
 	err := cfg.Validate()
@@ -59,7 +59,7 @@ func TestInvalidConfigurationWithoutToken(t *testing.T) {
 
 func TestInvalidConfigurationWithoutBranch(t *testing.T) {
 	setEnv()
-	os.Setenv("PLUGIN_BRANCH", "") // <= here
+	os.Setenv("VAULTIER_BRANCH", "") // <= here
 
 	cfg := Create()
 	err := cfg.Validate()
@@ -70,7 +70,7 @@ func TestInvalidConfigurationWithoutBranch(t *testing.T) {
 
 func TestInvalidConfigurationWithoutRunCause(t *testing.T) {
 	setEnv()
-	os.Setenv("PLUGIN_RUN_CAUSE", "") // <= here
+	os.Setenv("VAULTIER_RUN_CAUSE", "") // <= here
 
 	cfg := Create()
 	err := cfg.Validate()
@@ -81,7 +81,7 @@ func TestInvalidConfigurationWithoutRunCause(t *testing.T) {
 
 func TestInvalidConfigurationWithoutOutputFormat(t *testing.T) {
 	setEnv()
-	os.Setenv("PLUGIN_OUTPUT_FORMAT", "") // <= here
+	os.Setenv("VAULTIER_OUTPUT_FORMAT", "") // <= here
 
 	cfg := Create()
 	err := cfg.Validate()
@@ -92,7 +92,7 @@ func TestInvalidConfigurationWithoutOutputFormat(t *testing.T) {
 
 func TestInvalidConfigurationWithoutOutputPath(t *testing.T) {
 	setEnv()
-	os.Setenv("PLUGIN_SECRET_OUTPUT_PATH", "") // <= here
+	os.Setenv("VAULTIER_SECRET_OUTPUT_PATH", "") // <= here
 
 	cfg := Create()
 	err := cfg.Validate()
