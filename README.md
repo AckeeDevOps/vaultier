@@ -44,6 +44,25 @@ data:
 {{- end }}
 ```
 
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: redis
+    volumeMounts:
+    - name: app-cfg-volume
+      mountPath: "/etc/secrets"
+      readOnly: true
+  volumes:
+  - name: app-cfg-volume
+    secret:
+      secretName: mysecret
+```
+
 and use them with Helm CLI
 
 ```bash
