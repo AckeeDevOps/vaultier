@@ -88,12 +88,13 @@ func generateManifest(c *config.PluginConfig, s map[string]interface{}) []byte {
 		// convert the whole document to JSON first
 		res, err := json.Marshal(s)
 		if err != nil {
-			log.Fatal("could not marshal config to JSON")
+			log.Fatal("could not marshal intermediate config to JSON")
 		}
 
 		// add the whole configuration as en extra key
 		s["cfg.json"] = string(res)
 
+		// create final Helm values mapping
 		finalObj = helmManifestFotmat{
 			Secrets: convertToB64String(s),
 		}
