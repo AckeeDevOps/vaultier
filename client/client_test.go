@@ -18,7 +18,7 @@ func (mockFetcherSuccess) Fetch(token string, url string) (*VaultResponse, error
 		Renewable:     true,
 		LeaseDuration: 1,
 		Data: VaultResponseData{
-			Data: map[string]string{
+			Data: map[string]interface{}{
 				"vaultVar1": "secret1",
 				"vaultVar2": "secret2",
 			},
