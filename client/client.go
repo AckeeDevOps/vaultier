@@ -74,9 +74,9 @@ func (c Client) Get(path string, keyMap []SecretKeyMapEntry, fetcher VaultRespon
 		if m.LocalKey == "" {
 			localKey = m.VaultKey
 		} else {
-			localKey = LocalKey
+			localKey = m.LocalKey
 		}
-		secrets[m.LocalKey] = respJSON.Data.Data[m.VaultKey]
+		secrets[localKey] = respJSON.Data.Data[m.VaultKey]
 	}
 
 	return secrets, nil
