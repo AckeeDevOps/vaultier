@@ -71,7 +71,7 @@ func (c Client) Get(path string, keyMap []SecretKeyMapEntry, fetcher VaultRespon
 
 	for _, m := range keyMap {
 		var localKey string
-		if m.LocalKey == nil {
+		if m.LocalKey == "" {
 			localKey = m.VaultKey
 		} else {
 			localKey = LocalKey
