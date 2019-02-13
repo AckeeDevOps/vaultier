@@ -1,7 +1,7 @@
 package main
 
 import (
-	client "github.com/vranystepan/vaultier/client"
+	client "github.com/AckeeDevOps/vaultier/client"
 )
 
 /*

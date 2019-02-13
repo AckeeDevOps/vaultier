@@ -8,8 +8,8 @@ import (
 
 	b64 "encoding/base64"
 
-	"github.com/vranystepan/vaultier/client"
-	"github.com/vranystepan/vaultier/config"
+	"github.com/AckeeDevOps/vaultier/client"
+	"github.com/AckeeDevOps/vaultier/config"
 	yaml "gopkg.in/yaml.v2"
 )
 
