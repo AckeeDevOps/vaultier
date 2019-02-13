@@ -9,11 +9,11 @@ stages:
 before_script:
   - echo $CI_PIPELINE_SOURCE
   - apk add git
-  - mkdir -p /go/src/github.com/vranystepan
+  - mkdir -p /go/src/github.com/AckeeDevOps
   - go get -u golang.org/x/lint/golint
   - go get -u github.com/kyoh86/richgo
-  - ln -sf $CI_PROJECT_DIR /go/src/github.com/vranystepan/vaultier
-  - cd /go/src/github.com/vranystepan/vaultier
+  - ln -sf $CI_PROJECT_DIR /go/src/github.com/AckeeDevOps/vaultier
+  - cd /go/src/github.com/AckeeDevOps/vaultier
   - export CGO_ENABLED=0
   - export GOOS=linux
 
