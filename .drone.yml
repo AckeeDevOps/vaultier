@@ -7,6 +7,11 @@ pipeline:
     image: golang:latest
     commands:
       - go test $(go list ./... | grep -v /vendor/) -v -cover
+  lint:
+    image: golang:latest
+    commands:
+      - go get -u golang.org/x/lint/golint
+      - golint . config client
   build:
     image: golang:latest
     commands:
