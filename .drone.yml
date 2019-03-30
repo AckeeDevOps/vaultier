@@ -1,12 +1,15 @@
 workspace:
   base: /go
   path: src/github.com/AckeeDevOps/vaultier
-  
+
+
 pipeline:
-  clone:
-    image: plugins/git
-    tags: true
-    
+
+  fetch:
+    image: docker:git
+    commands:
+      - git fetch --tags
+  
   test:
     image: golang:latest
     commands:
