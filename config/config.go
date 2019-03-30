@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// PluginConfig contains configuration options received from the environment variables
 type PluginConfig struct {
 	VaultAddr    string
 	VaultToken   string
@@ -18,6 +19,7 @@ type PluginConfig struct {
 	OutputFormat string
 }
 
+// Create creates a new object with the actual configuration options
 func Create() *PluginConfig {
 	p := PluginConfig{}
 
@@ -40,6 +42,7 @@ func Create() *PluginConfig {
 	return &p
 }
 
+// Validate does a basic validation of values received from the environment
 func (c *PluginConfig) Validate() error {
 	errors := []string{}
 
