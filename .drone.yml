@@ -12,7 +12,11 @@ pipeline:
     commands:
       - go get -u golang.org/x/lint/golint
       - golint . config client
-  build:
+  release:
+    when:
+      event:
+        - tag
     image: golang:latest
+    secrets: [github_token]
     commands:
-      - go build
+      - curl -sL https://git.io/goreleaser | bash
