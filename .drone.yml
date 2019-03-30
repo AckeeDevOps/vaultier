@@ -1,6 +1,6 @@
 workspace:
   base: /go
-  path: src/github.com/AckeeDevOpss/vaultier
+  path: src/github.com/AckeeDevOps/vaultier
   
 pipeline:
   test:
