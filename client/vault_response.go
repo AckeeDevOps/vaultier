@@ -1,6 +1,6 @@
 package client
 
-// VaultReponseData represents the actual secrets stored in Vault
+// VaultResponseData represents the actual secrets stored in Vault
 type VaultResponseData struct {
 	Data map[string]interface{} `json:"data"`
 }
