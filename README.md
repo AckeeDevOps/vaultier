@@ -1,5 +1,7 @@
 # Vaultier: CI/CD Vault helper
 
+[![Build Status](https://cloud.drone.io/api/badges/AckeeDevOps/vaultier/status.svg)](https://cloud.drone.io/AckeeDevOps/vaultier)
+
 Vaultier will be simple helper for Container native CI/CD pipelines. 
 The main goal is to parse specs file, obtain secrets from the Vault 
 instance and create basic (one level deep) JSON file for the further 
