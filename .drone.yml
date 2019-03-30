@@ -1,0 +1,13 @@
+workspace:
+  base: /go
+  path: src/github.com/AckeeDevOpss/vaultier
+  
+pipeline:
+  test:
+    image: golang:latest
+    commands:
+      - go test $(go list ./... | grep -v /vendor/) -v -cover
+  build:
+    image: golang:latest
+    commands:
+      - go build
