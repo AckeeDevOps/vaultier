@@ -11,7 +11,7 @@ pipeline:
     image: golang:latest
     commands:
       - go get -u golang.org/x/lint/golint
-      - golint . config client
+      - golint . config client --set_exit_status
   release:
     when:
       event:
