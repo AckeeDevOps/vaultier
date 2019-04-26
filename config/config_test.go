@@ -8,8 +8,7 @@ import (
 func setEnv() {
 	os.Setenv("VAULTIER_VAULT_ADDR", "http://vault.co.uk")
 	os.Setenv("VAULTIER_VAULT_TOKEN", "abcdefg")
-	os.Setenv("VAULTIER_BRANCH", "master")
-	os.Setenv("VAULTIER_RUN_CAUSE", "delivery")
+	os.Setenv("VAULTIER_ENVIRONMENT", "production")
 	os.Setenv("VAULTIER_OUTPUT_FORMAT", "helm")
 	os.Setenv("VAULTIER_SECRET_SPECS_PATH", "/tmp/input")
 	os.Setenv("VAULTIER_SECRET_OUTPUT_PATH", "/tmp/output")
@@ -59,23 +58,12 @@ func TestInvalidConfigurationWithoutToken(t *testing.T) {
 
 func TestInvalidConfigurationWithoutBranch(t *testing.T) {
 	setEnv()
-	os.Setenv("VAULTIER_BRANCH", "") // <= here
+	os.Setenv("VAULTIER_ENVIRONMENT", "") // <= here
 
 	cfg := Create()
 	err := cfg.Validate()
 	if err == nil {
 		t.Errorf("Validator should return error but it does not")
-	}
-}
-
-func TestInvalidConfigurationWithoutRunCause(t *testing.T) {
-	setEnv()
-	os.Setenv("VAULTIER_RUN_CAUSE", "") // <= here
-
-	cfg := Create()
-	err := cfg.Validate()
-	if err != nil {
-		t.Errorf("Validator should be happy but it return %s", err)
 	}
 }
 

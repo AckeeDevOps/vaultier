@@ -97,15 +97,10 @@ vault token, follow
 [official Vault documentation](https://www.vaultproject.io/docs/commands/token/create.html) 
 to get one
 
-**`VAULTIER_BRANCH`**
+**`VAULTIER_ENVIRONMENT`**
 
-A branch you want to retrieve secrets for. Same branch has to be 
+An environment you want to retrieve secrets for. Same environemtn has to be 
 specified in the specs file. 
-
-**`VAULTIER_RUN_CAUSE`**
-
-This option influences whether `branches` or `testConfig` will  
-be selected. Currently supported options are `delivery` or `test`.
 
 **`VAULTIER_OUTPUT_FORMAT`**
 As mentioned, this option influences the output format. 
@@ -124,9 +119,9 @@ Path to the output file. Absolute or relative.
 ```yaml
 ---
 # will be used only when 'delivery' is selected
-branches:
+environments:
   # secrets will be selected based on VAULTIER_BRANCH env. variable
-  - name: master
+  - name: production
     secrets:
       - path: secret/data/blah/production/config1
         # each Vault path can have more secrets you
@@ -139,18 +134,19 @@ branches:
         keyMap:
           - vaultKey: vaultVariableName2
             localKey: VAR2
-
-# will be used only when 'test' is selected
-testConfig:
-  secrets:
-    - path: secret/data/blah/test/config1
-      keyMap:
-        - vaultKey: vaultVariableName1
-          localKey: VAR1
-    - path: secret/data/blah/test/config2
-      keyMap:
-        - vaultKey: vaultVariableName2
-          localKey: VAR2
+  - name: test
+    secrets:
+      - path: secret/data/blah/test/config1
+        # each Vault path can have more secrets you
+        # waint to obtain so so can specify more
+        # keyMap entries
+        keyMap:
+          - vaultKey: vaultVariableName1
+            localKey: VAR1
+      - path: secret/data/blah/test/config2
+        keyMap:
+          - vaultKey: vaultVariableName2
+            localKey: VAR2
 ```
 
 ## Example use in CD pipeline
