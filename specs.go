@@ -16,7 +16,7 @@ type SecretPathEntry struct {
 /*
 Branch represents configuration for the certain git branch
 */
-type Branch struct {
+type Environment struct {
 	Name    string            `yaml:"name"`
 	Secrets []SecretPathEntry `yaml:"secrets"`
 }
@@ -31,21 +31,9 @@ type TestConfig struct {
 
 /*
 Specs is representation of input YAML specification
-example:
----
-vaultAddr: ''
-token: ''
-specs:
-- branch: master
-  secrets:
-  - path: secret/data/test
-    keyMap:
-      - vaultKey: key
-        localKey: KEY
 */
 type Specs struct {
-	Branches   []Branch   `yaml:"branches"`
-	TestConfig TestConfig `yaml:"testConfig"`
+	Environments []Environment `yaml:"environments"`
 }
 
 // perform validation of required fields
