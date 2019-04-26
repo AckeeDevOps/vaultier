@@ -12,8 +12,7 @@ import (
 type PluginConfig struct {
 	VaultAddr    string
 	VaultToken   string
-	Cause        string
-	Branch       string
+	Environment  string
 	SpecsPath    string
 	OutputPath   string
 	OutputFormat string
@@ -23,18 +22,16 @@ type PluginConfig struct {
 func Create() *PluginConfig {
 	p := PluginConfig{}
 
-	vaultAddr := os.Getenv("VAULTIER_VAULT_ADDR")          // required
-	vaultToken := os.Getenv("VAULTIER_VAULT_TOKEN")        // required
-	currentBranch := os.Getenv("VAULTIER_BRANCH")          // required
-	cause := os.Getenv("VAULTIER_RUN_CAUSE")               // optional, default=delivery
-	outputFormat := os.Getenv("VAULTIER_OUTPUT_FORMAT")    // optional, default=delivery
-	specsPath := os.Getenv("VAULTIER_SECRET_SPECS_PATH")   // optional, default=./secrets.yaml
-	outputPath := os.Getenv("VAULTIER_SECRET_OUTPUT_PATH") // required
+	vaultAddr := os.Getenv("VAULTIER_VAULT_ADDR")           // required
+	vaultToken := os.Getenv("VAULTIER_VAULT_TOKEN")         // required
+	currentEnvironment := os.Getenv("VAULTIER_EMVIRONMENT") // required
+	outputFormat := os.Getenv("VAULTIER_OUTPUT_FORMAT")     // optional, default=delivery
+	specsPath := os.Getenv("VAULTIER_SECRET_SPECS_PATH")    // optional, default=./secrets.yaml
+	outputPath := os.Getenv("VAULTIER_SECRET_OUTPUT_PATH")  // required
 
 	p.VaultAddr = strings.ToLower(vaultAddr)
-	p.Branch = strings.ToLower(currentBranch)
+	p.Environment = strings.ToLower(currentEnvironment)
 	p.VaultToken = vaultToken
-	p.Cause = strings.ToLower(cause)
 	p.SpecsPath = specsPath
 	p.OutputPath = outputPath
 	p.OutputFormat = outputFormat
@@ -58,19 +55,13 @@ func (c *PluginConfig) Validate() error {
 	}
 
 	// validate branch
-	if c.Branch == "" {
-		errors = append(errors, "empty branch name")
+	if c.Environment == "" {
+		errors = append(errors, "empty environment name")
 	}
 
 	// validate branch
 	if c.OutputPath == "" {
 		errors = append(errors, "empty output path")
-	}
-
-	// validate run cause
-	if c.Cause != "delivery" && c.Cause != "test" {
-		log.Print("using default run cause: delivery")
-		c.Cause = "delivery"
 	}
 
 	// validate output format
