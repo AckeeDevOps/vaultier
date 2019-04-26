@@ -24,7 +24,7 @@ func Create() *PluginConfig {
 
 	vaultAddr := os.Getenv("VAULTIER_VAULT_ADDR")           // required
 	vaultToken := os.Getenv("VAULTIER_VAULT_TOKEN")         // required
-	currentEnvironment := os.Getenv("VAULTIER_EMVIRONMENT") // required
+	currentEnvironment := os.Getenv("VAULTIER_ENVIRONMENT") // required
 	outputFormat := os.Getenv("VAULTIER_OUTPUT_FORMAT")     // optional, default=delivery
 	specsPath := os.Getenv("VAULTIER_SECRET_SPECS_PATH")    // optional, default=./secrets.yaml
 	outputPath := os.Getenv("VAULTIER_SECRET_OUTPUT_PATH")  // required
