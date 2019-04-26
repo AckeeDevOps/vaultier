@@ -31,21 +31,17 @@ func mergeResults(maps []map[string]interface{}) map[string]interface{} {
 // get configuration from the specs file based on PLUGIN_RUN_CAUSE
 func getSelection(s Specs, c *config.PluginConfig) []SecretPathEntry {
 	var specsSelection []SecretPathEntry
-	if c.Cause == "delivery" {
-		for _, b := range s.Branches {
-			if b.Name == c.Branch {
-				specsSelection = b.Secrets
-				break
-			}
+
+	// get the specified environment
+	for _, e := range s.Environments {
+		if e.Name == c.Environment {
+			specsSelection = e.Secrets
+			break
 		}
-	} else if c.Cause == "test" {
-		specsSelection = s.TestConfig.Secrets
-	} else {
-		log.Fatal("unknown PLUGIN_RUN_CAUSE value")
 	}
 
 	if cap(specsSelection) == 0 {
-		log.Fatal(fmt.Sprintf("%s configuration is empty", c.Cause))
+		log.Fatal(fmt.Sprintf("configuration for %s is empty", c.Environment))
 	}
 
 	return specsSelection
