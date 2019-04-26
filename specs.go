@@ -14,7 +14,7 @@ type SecretPathEntry struct {
 }
 
 /*
-Branch represents configuration for the certain git branch
+Environment represents configuration for the certain git branch
 */
 type Environment struct {
 	Name    string            `yaml:"name"`
