@@ -77,6 +77,9 @@ func (c Client) Get(path string, keyMap []SecretKeyMapEntry, fetcher VaultRespon
 			localKey = m.LocalKey
 		}
 		secrets[localKey] = respJSON.Data.Data[m.VaultKey]
+                if secrets[localKey] == nil {
+                	log.Printf("%s seems to be null, perhaps it does not exist in Vault?", secrets[localKey])
+                }
 	}
 
 	return secrets, nil
